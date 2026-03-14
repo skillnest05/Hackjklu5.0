@@ -1,0 +1,166 @@
+/* Essay Components CSS */
+
+/* Score Breakdown */
+.score-breakdown {
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: all var(--transition-normal);
+}
+
+.score-breakdown:hover {
+  background: var(--bg-card-hover);
+}
+
+.score-breakdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.score-breakdown-title h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.score-breakdown-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.score-breakdown-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.score-breakdown-max {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+.score-breakdown-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.score-breakdown-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease;
+}
+
+.score-breakdown-feedback {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Issue Card */
+.issue-card {
+  padding: 16px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid;
+  margin-bottom: 10px;
+  transition: all var(--transition-normal);
+}
+
+.issue-card:hover {
+  transform: translateX(4px);
+}
+
+.issue-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.issue-card-icon {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.issue-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.issue-card-type {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.issue-card-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.issue-card-location {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Essay Form */
+.essay-form {
+  max-width: 900px;
+}
+
+.essay-form-group {
+  margin-bottom: 24px;
+}
+
+.essay-form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.essay-form-sublabel {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.essay-textarea {
+  min-height: 350px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.essay-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.essay-form-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.essay-form-stat {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.essay-form-stat span {
+  color: var(--text-primary);
+  font-weight: 600;
+}
