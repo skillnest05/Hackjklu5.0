@@ -249,6 +249,21 @@ hackjklu5.0/
 
 ---
 
+## 🚀 Upcoming Hackathon Innovations (Roadmap)
+
+To push the boundaries of what an AI educational tool can be, we are actively developing three "Wow Factor" features:
+
+### 1. Interactive "Argument Map" (Visual AI)
+Instead of just providing text-based feedback, EssayAI will parse the logical structure of an essay and generate an **interactive Node Graph**. This mind map will visually connect the student's core claims to their supporting evidence, exposing logical gaps and unsupported premises at a glance.
+
+### 2. Live "Debate Mode" (Active Learning Companion)
+Transforming from a passive grader to an active AI Tutor. After evaluation, students can enter "Debate Mode" where the AI adopts the **opposing side** of their essay. The AI will challenge the student's weakest points in a real-time chat interface, forcing them to actively defend their thesis and improve their argumentation skills.
+
+### 3. Voice-Dictated Rhetoric Analysis (Multimodal AI)
+A multimodal accessibility feature where students can **speak** their essays or practice answers into the microphone. The system transcribes the speech in real-time and evaluates their *spoken rhetoric* — detecting hesitations, pacing, and confidence levels to generate a unique "Persuasiveness" metric.
+
+---
+
 ## 👥 Team
 
 Built for **Inter-IIT Tech Meet — HackJKLU 5.0**
