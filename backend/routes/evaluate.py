@@ -35,7 +35,7 @@ async def evaluate(request: EssayRequest):
         weights = request.settings["weights"]
 
     # ── Run the multi-aspect evaluation ──
-    result = evaluate_essay(text, request.prompt, weights)
+    result = evaluate_essay(text, request.prompt)
 
     # ── Run integrity checks ──
     all_issues = []
@@ -65,6 +65,7 @@ async def evaluate(request: EssayRequest):
         "overall_score": result["overall_score"],
         "scores": result["scores"],
         "feedback": result["feedback"],
+        "argument_map": result.get("argument_map", {"nodes": [], "edges": []}),
         "issues": all_issues,
         "word_count": word_count,
         "reading_time": reading_time,
@@ -84,6 +85,7 @@ async def evaluate(request: EssayRequest):
         overall_score=result["overall_score"],
         scores=ScoreBreakdown(**result["scores"]),
         feedback=FeedbackBreakdown(**result["feedback"]),
+        argument_map=result.get("argument_map", {"nodes": [], "edges": []}),
         issues=[IssueDetail(**issue) for issue in all_issues],
         word_count=word_count,
         reading_time=reading_time,

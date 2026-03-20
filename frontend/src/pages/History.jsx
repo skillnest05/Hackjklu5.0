@@ -47,6 +47,21 @@ export default function History() {
       });
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/history/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setEssays(essays.filter(essay => essay.id !== id));
+      } else {
+        console.error("Failed to delete essay.");
+      }
+    } catch (error) {
+      console.error("Error deleting essay:", error);
+    }
+  };
+
   const filteredEssays = essays
     .filter((essay) => {
       const title = essay.title || "";
@@ -196,7 +211,10 @@ export default function History() {
               >
                 <HiOutlineEye /> View Details
               </button>
-              <button className="btn btn-ghost btn-ghost-danger">
+              <button 
+                className="btn btn-ghost btn-ghost-danger"
+                onClick={() => handleDelete(essay.id)}
+              >
                 <HiOutlineTrash /> Delete
               </button>
             </div>

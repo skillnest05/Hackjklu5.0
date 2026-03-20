@@ -10,16 +10,18 @@ from contextlib import asynccontextmanager
 import database
 from routes.evaluate import router as evaluate_router
 from routes.history import router as history_router
+from routes.debate import router as debate_router
+from routes.rhetoric import router as rhetoric_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialize database on startup."""
     database.init_db()
-    print("✅ Database initialized")
-    print("🚀 EssayAI Backend is ready!")
+    print("Database initialized")
+    print("EssayAI Backend is ready!")
     yield
-    print("👋 Shutting down EssayAI Backend")
+    print("Shutting down EssayAI Backend")
 
 
 app = FastAPI(
@@ -45,6 +47,8 @@ app.add_middleware(
 # Register routers
 app.include_router(evaluate_router)
 app.include_router(history_router)
+app.include_router(debate_router)
+app.include_router(rhetoric_router)
 
 
 @app.get("/")

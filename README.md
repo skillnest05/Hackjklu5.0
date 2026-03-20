@@ -135,7 +135,7 @@ EssayAI goes beyond scoring to **protect academic integrity**:
 │  ┌─────────────────────────────────────────────────────┐  │
 │  │              Multi-Aspect Evaluator                  │  │
 │  │  ┌───────────┬────────────┬──────────┬───────────┐  │  │
-│  │  │Coherence  │ Argument   │ Factual  │Originality│  │  │
+│  │  │Coherence  │ Argument   │ Factual  │Originality│    │  │
 │  │  │Analyzer   │ Evaluator  │ Checker  │ Scorer    │  │  │
 │  │  └───────────┴────────────┴──────────┴───────────┘  │  │
 │  │  ┌───────────┬────────────┬──────────────────────┐  │  │
@@ -153,6 +153,25 @@ EssayAI goes beyond scoring to **protect academic integrity**:
 │  └─────────────────────────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────┘
 ```
+Raw Essay Text
+       ↓
+[Stage 1: Tokenize] → sentences, words, paragraphs
+       ↓
+[Stage 2: Extract Features]
+  ├── score_coherence()       → Jaccard + transitions + structure
+  ├── score_argument_strength() → marker density + hedging
+  ├── score_factual_correctness() → citation patterns + absolutes
+  ├── score_originality()    → TTR + cliché detection
+  └── score_writing_quality() → readability stats
+       ↓
+[Stage 3: Ensemble] → weighted average = overall_score
+       ↓
+[Stage 4: Integrity] → hallucination + bias + plagiarism flags
+       ↓
+[FastAPI Response] → JSON with scores + feedback + issues + argument_map
+       ↓
+[React Frontend] → rendered results, argument map, action plan
+
 
 ---
 

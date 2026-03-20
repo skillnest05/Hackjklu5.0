@@ -581,7 +581,161 @@ def score_writing_quality(text: str) -> tuple[int, str]:
 #  MAIN EVALUATOR — Orchestrator
 # ──────────────────────────────────────────────
 
-def evaluate_essay(text: str, prompt: str = "", weights: dict | None = None) -> dict:
+# ──────────────────────────────────────────────
+#  ARGUMENT MAP GENERATOR (PHASE 8 INNOVATION)
+# ──────────────────────────────────────────────
+
+def generate_argument_map(text: str) -> dict:
+    """
+    Innovative Feature: Unpacks the logical structure of the essay.
+    Returns a dictionary of Nodes and Edges suitable for React Flow.
+    """
+    paragraphs = _get_paragraphs(text)
+    nodes = []
+    edges = []
+    
+    if not paragraphs:
+        return {"nodes": [], "edges": []}
+
+    # 1. Thesis Node (Usually the last sentence of the intro paragraph)
+    intro_sentences = _tokenize_sentences(paragraphs[0])
+    thesis_text = intro_sentences[-1] if intro_sentences else paragraphs[0]
+    
+    nodes.append({
+        "id": "thesis-1",
+        "type": "custom",
+        "data": {"label": "Main Thesis", "text": thesis_text},
+        "position": {"x": 350, "y": 0}
+    })
+
+    claim_count = 0
+    evidence_count = 0
+    counter_count = 0
+    y_offset = 180
+
+    for i, para in enumerate(paragraphs[1:], start=1):
+        sentences = _tokenize_sentences(para)
+        if not sentences:
+            continue
+            
+        # The first sentence of a paragraph is usually the topic sentence / claim
+        topic_sentence = sentences[0]
+        s_clean = topic_sentence.lower().translate(str.maketrans("", "", string.punctuation))
+        s_words = set(s_clean.split())
+        
+        counter_markers = {"however", "although", "despite", "critics", "opponents", "while", "unlike", "conversely", "argue"}
+        is_counter = bool(counter_markers.intersection(s_words)) or "on the other hand" in s_clean
+        
+        if is_counter:
+            counter_count += 1
+            node_id = f"counter-{counter_count}"
+            nodes.append({
+                "id": node_id,
+                "type": "custom",
+                "data": {"label": f"Counter-Argument {counter_count}", "text": topic_sentence},
+                "position": {"x": 50, "y": y_offset}
+            })
+            edges.append({
+                "id": f"edge-thesis-{node_id}",
+                "source": "thesis-1",
+                "target": node_id,
+                "animated": True,
+            })
+            parent_id = node_id
+            x_base = 50
+        else:
+            # It's a supporting claim or a conclusion if it's the last paragraph
+            is_conclusion = (i == len(paragraphs) - 1) and ("conclusion" in s_clean or "to summarize" in s_clean or "finally" in s_clean)
+            
+            if is_conclusion:
+                node_id = "conclusion-1"
+                nodes.append({
+                    "id": node_id,
+                    "type": "custom",
+                    "data": {"label": "Conclusion", "text": topic_sentence},
+                    "position": {"x": 350, "y": y_offset + 50}
+                })
+                # Connect conclusion from thesis
+                edges.append({
+                    "id": f"edge-thesis-{node_id}",
+                    "source": "thesis-1",
+                    "target": node_id,
+                    "animated": True,
+                })
+                parent_id = node_id
+                x_base = 350
+            else:
+                claim_count += 1
+                node_id = f"claim-{claim_count}"
+                # Alternate left/right around center for visual balance
+                x_offset = 350 + (250 if claim_count % 2 == 0 else -100)
+                nodes.append({
+                    "id": node_id,
+                    "type": "custom",
+                    "data": {"label": f"Claim {claim_count}", "text": topic_sentence},
+                    "position": {"x": x_offset, "y": y_offset}
+                })
+                edges.append({
+                    "id": f"edge-thesis-{node_id}",
+                    "source": "thesis-1",
+                    "target": node_id,
+                    "animated": True,
+                })
+                parent_id = node_id
+                x_base = x_offset
+
+        # Extract evidence from the rest of the paragraph
+        ev_in_para = 0
+        for sent in sentences[1:]:
+            sent_clean = sent.lower().translate(str.maketrans("", "", string.punctuation))
+            sent_words = set(sent_clean.split())
+            evidence_markers = {"example", "because", "according", "studies", "research", "instance", "fact", "shows", "proves", "data"}
+            
+            is_evidence = bool(evidence_markers.intersection(sent_words)) or any(c.isdigit() for c in sent) or "for example" in sent_clean
+            
+            if is_evidence and ev_in_para < 2:
+                evidence_count += 1
+                ev_in_para += 1
+                ev_node_id = f"evidence-{evidence_count}"
+                
+                nodes.append({
+                    "id": ev_node_id,
+                    "type": "custom",
+                    "data": {"label": "Evidence", "text": sent},
+                    "position": {"x": x_base + (ev_in_para * 90) - 45, "y": y_offset + 160}
+                })
+                edges.append({
+                    "id": f"edge-{parent_id}-{ev_node_id}",
+                    "source": parent_id,
+                    "target": ev_node_id,
+                    "animated": False,
+                })
+        
+        y_offset += (320 if ev_in_para > 0 else 200)
+
+    # Fallback if no claims found
+    if claim_count == 0 and counter_count == 0:
+        sentences = _tokenize_sentences(text)
+        if len(sentences) > 1:
+            for j in range(1, min(4, len(sentences))):
+                node_id = f"point-{j}"
+                nodes.append({
+                    "id": node_id,
+                    "type": "custom",
+                    "data": {"label": "Supporting Point", "text": sentences[j]},
+                    "position": {"x": 350, "y": j * 160}
+                })
+                edges.append({
+                    "id": f"edge-fallback-{j}",
+                    "source": "thesis-1" if j == 1 else f"point-{j-1}",
+                    "target": node_id,
+                    "animated": True
+                })
+
+    return {"nodes": nodes, "edges": edges}
+
+
+def evaluate_essay(essay_text: str, prompt_text: str = "") -> dict:
     """
     Run all 5 scoring dimensions and produce a comprehensive evaluation.
     
@@ -601,14 +755,14 @@ def evaluate_essay(text: str, prompt: str = "", weights: dict | None = None) -> 
         "originality": 15,
         "writing_quality": 15,
     }
-    w = weights or default_weights
+    w = default_weights # weights parameter removed, using default
 
     # Run all scorers
-    coh_score, coh_feedback = score_coherence(text)
-    arg_score, arg_feedback = score_argument_strength(text, prompt)
-    fac_score, fac_feedback = score_factual_correctness(text)
-    ori_score, ori_feedback = score_originality(text)
-    wri_score, wri_feedback = score_writing_quality(text)
+    coh_score, coh_feedback = score_coherence(essay_text)
+    arg_score, arg_feedback = score_argument_strength(essay_text, prompt_text)
+    fac_score, fac_feedback = score_factual_correctness(essay_text)
+    ori_score, ori_feedback = score_originality(essay_text)
+    wri_score, wri_feedback = score_writing_quality(essay_text)
 
     # Weighted overall
     overall = int(
@@ -637,7 +791,7 @@ def evaluate_essay(text: str, prompt: str = "", weights: dict | None = None) -> 
         tips.append("Your essay is very strong! To push for mastery, focus on stylistic nuance and deeper critical analysis of counter-arguments.")
 
     # Generate practice questions based on length and weaknesses
-    words = text.split()
+    words = essay_text.split()
     word_count = len(words)
     num_questions = 1
     if word_count > 300:
@@ -669,6 +823,9 @@ def evaluate_essay(text: str, prompt: str = "", weights: dict | None = None) -> 
         elif weakness == "writing_quality":
             questions.append("Practice: Rewrite your longest run-on sentence by breaking it into two crisp, concise sentences.")
 
+    argument_map = generate_argument_map(essay_text)
+
+    # Compile the final result
     return {
         "overall_score": overall,
         "scores": {
@@ -687,6 +844,7 @@ def evaluate_essay(text: str, prompt: str = "", weights: dict | None = None) -> 
             "improvement_tips": tips,
             "practice_questions": questions,
         },
+        "argument_map": argument_map,
     }
 
 

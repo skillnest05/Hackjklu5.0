@@ -17,6 +17,25 @@ class IssueDetail(BaseModel):
     location: str = Field(..., description="Where in the essay the issue was found")
 
 
+class Node(BaseModel):
+    id: str
+    type: str = Field(..., description="thesis, claim, or evidence")
+    data: dict = Field(..., description="Contains 'label' and 'text'")
+    position: dict = Field(..., description="x and y coordinates")
+
+
+class Edge(BaseModel):
+    id: str
+    source: str
+    target: str
+    animated: bool = False
+
+
+class ArgumentMap(BaseModel):
+    nodes: list[Node] = Field(default_factory=list)
+    edges: list[Edge] = Field(default_factory=list)
+
+
 class ScoreBreakdown(BaseModel):
     coherence: int = Field(..., ge=0, le=100)
     argument_strength: int = Field(..., ge=0, le=100)
@@ -46,6 +65,7 @@ class EvaluationResponse(BaseModel):
     scores: ScoreBreakdown
     feedback: FeedbackBreakdown
     issues: list[IssueDetail]
+    argument_map: ArgumentMap
     word_count: int
     reading_time: str
 

@@ -33,6 +33,7 @@ def init_db():
             scores TEXT NOT NULL,
             feedback TEXT NOT NULL,
             issues TEXT NOT NULL DEFAULT '[]',
+            argument_map TEXT NOT NULL DEFAULT '{"nodes": [], "edges": []}',
             word_count INTEGER NOT NULL DEFAULT 0,
             reading_time TEXT NOT NULL DEFAULT '1 min'
         )
@@ -48,8 +49,8 @@ def save_evaluation(data: dict) -> int:
     cursor.execute("""
         INSERT INTO evaluations 
         (title, prompt, essay_text, submitted_at, status, overall_score, 
-         scores, feedback, issues, word_count, reading_time)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         scores, feedback, issues, argument_map, word_count, reading_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         data["title"],
         data["prompt"],
@@ -60,6 +61,7 @@ def save_evaluation(data: dict) -> int:
         json.dumps(data["scores"]),
         json.dumps(data["feedback"]),
         json.dumps(data["issues"]),
+        json.dumps(data.get("argument_map", {"nodes": [], "edges": []})),
         data["word_count"],
         data["reading_time"],
     ))
@@ -90,6 +92,7 @@ def get_all_evaluations() -> list[dict]:
             "scores": json.loads(row["scores"]),
             "feedback": json.loads(row["feedback"]),
             "issues": json.loads(row["issues"]),
+            "argument_map": json.loads(row["argument_map"]) if "argument_map" in row.keys() else {"nodes": [], "edges": []},
             "word_count": row["word_count"],
             "reading_time": row["reading_time"],
         })
@@ -118,6 +121,7 @@ def get_evaluation_by_id(eval_id: int) -> dict | None:
         "scores": json.loads(row["scores"]),
         "feedback": json.loads(row["feedback"]),
         "issues": json.loads(row["issues"]),
+        "argument_map": json.loads(row["argument_map"]) if "argument_map" in row.keys() else {"nodes": [], "edges": []},
         "word_count": row["word_count"],
         "reading_time": row["reading_time"],
     }
