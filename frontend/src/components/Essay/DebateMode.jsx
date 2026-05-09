@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE } from '../../config';
 
 const ROUND_LABELS = [
   "Round 1: Opening Challenge",
@@ -65,7 +66,7 @@ export default function DebateMode({ essay }) {
     setPhase('loading');
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/api/debate/start', {
+      const res = await fetch(`${API_BASE}/api/debate/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -94,7 +95,7 @@ export default function DebateMode({ essay }) {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/debate/respond', {
+      const res = await fetch(`${API_BASE}/api/debate/respond`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

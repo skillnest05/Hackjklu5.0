@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineUpload, HiOutlinePencilAlt, HiOutlineSparkles } from 'react-icons/hi';
 import LoadingSpinner from '../components/Common/LoadingSpinner';
+import { API_BASE } from '../config';
 // no mock data
 import './Pages.css';
 
@@ -48,7 +49,7 @@ export default function Submit() {
     }, 1000);
 
     try {
-      const response = await fetch('http://localhost:8000/api/evaluate', {
+      const response = await fetch(`${API_BASE}/api/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

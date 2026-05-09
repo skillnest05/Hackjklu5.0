@@ -14,6 +14,7 @@ import { RiLightbulbFlashLine } from 'react-icons/ri';
 import ScoreBreakdown from '../components/Essay/ScoreBreakdown';
 import IssueCard from '../components/Essay/IssueCard';
 import Badge from '../components/Common/Badge';
+import { API_BASE } from '../config';
 import './Pages.css';
 import './Results.css';
 import '../components/Essay/DebateMode.css';
@@ -28,7 +29,7 @@ function PracticeInteraction({ question, index, delay }) {
     if (!answer.trim()) return;
     setIsSubmitting(true);
     try {
-      const res = await fetch('http://localhost:8000/api/evaluate-practice', {
+      const res = await fetch(`${API_BASE}/api/evaluate-practice`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question, answer })
@@ -99,7 +100,7 @@ export default function Results() {
   useEffect(() => {
     if (!essay) {
       // If accessed directly without state, fetch the most recent evaluation
-      fetch('http://localhost:8000/api/history')
+      fetch(`${API_BASE}/api/history`)
         .then(res => res.json())
         .then(data => {
           if (data.evaluations && data.evaluations.length > 0) {

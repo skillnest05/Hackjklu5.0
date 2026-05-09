@@ -12,6 +12,7 @@ import {
 import StatCard from '../components/Cards/StatCard';
 import Badge from '../components/Common/Badge';
 import { useState, useEffect } from 'react';
+import { API_BASE } from '../config';
 // no mock data
 import './Pages.css';
 
@@ -36,7 +37,7 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/history')
+    fetch(`${API_BASE}/api/history`)
       .then(res => res.json())
       .then(data => {
         const evals = data.evaluations || [];

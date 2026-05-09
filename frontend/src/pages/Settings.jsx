@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { HiOutlineSave, HiOutlineRefresh } from 'react-icons/hi';
 import { toast } from 'react-toastify';
+import { API_BASE } from '../config';
 import './Pages.css';
 
 export default function Settings() {
@@ -14,7 +15,7 @@ export default function Settings() {
   });
 
   const [apiSettings, setApiSettings] = useState({
-    endpoint: 'http://localhost:8000',
+    endpoint: API_BASE,
     timeout: 30,
     maxWords: 5000,
     language: 'en',

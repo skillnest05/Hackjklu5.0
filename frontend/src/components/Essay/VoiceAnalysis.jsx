@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE } from '../../config';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -149,7 +150,7 @@ export default function VoiceAnalysis({ essay }) {
     setPhase('analyzing');
 
     try {
-      const res = await fetch('http://localhost:8000/api/rhetoric/analyze', {
+      const res = await fetch(`${API_BASE}/api/rhetoric/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

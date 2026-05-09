@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiOutlineSearch, HiOutlineFilter, HiOutlineEye, HiOutlineTrash } from 'react-icons/hi';
 import Badge from '../components/Common/Badge';
+import { API_BASE } from '../config';
 // no mock data
 import './Pages.css';
 
@@ -35,7 +36,7 @@ export default function History() {
   }, [searchParams]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/history')
+    fetch(`${API_BASE}/api/history`)
       .then(res => res.json())
       .then(data => {
         setEssays(data.evaluations || []);
@@ -49,7 +50,7 @@ export default function History() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/history/${id}`, {
+      const response = await fetch(`${API_BASE}/api/history/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
