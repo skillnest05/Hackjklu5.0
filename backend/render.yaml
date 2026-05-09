@@ -8,6 +8,6 @@ services:
     rootDir: backend
     envVars:
       - key: PYTHON_VERSION
-        value: "3.11.0"
+        value: "3.11.12"
       - key: ALLOWED_ORIGINS
         value: "https://your-frontend.vercel.app"
